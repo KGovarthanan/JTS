@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+    
+{% block title %}
+Task Manager | Login
+{% endblock title %}
+    
+{% block body %}
+<style>
+    .errorlist{
+      color: red;
+    }
+    .help_text {
+      background-color: blue;
+      color: white;
+      border-radius: 20px;
+      padding: 2px 2px;  
+      display: inline-block;  
+      max-width:100%;  
+      white-space: nowrap;  
+      font-size: 0.8em;  
+  }
+
+  </style>
+  {% if save == True %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Your User: {{username}} is Created Successfully , Now You can Log In</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+
+<div class="container d-flex justify-content-center align-items-center my-5  ">
+    <div class="card p-4 shadow-lg fw-bold" style="width: 350px;">
+        <h3 class="text-center mb-3">Login</h3>
+        <i class=" text-center mb-3" > New User, kindly Sign Up</i>
+        <form method="POST" action="{% url 'Mylogin' %}" novalidate >
+            {% csrf_token %}
+            <div><b>{{ form.non_field_errors }}</b>
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+            {{ form.username }}   
+            </div>
+        <b>{{form.username.errors}}</b>    
+            <div class="mb-3">
+                <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                {{ form.password }}
+            </div>
+         <b>{{form.password.errors}}</b>   
+            <div class="d-grid mx-md-5 py-2">
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    
+
+{% endblock body %}
+    
+ 
+    
