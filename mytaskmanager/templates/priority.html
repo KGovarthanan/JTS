@@ -1,0 +1,12 @@
+{% block dropdown %}
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Priority
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+      <li><a class="dropdown-item active" href="{% url 'query' 'L' %}">Low</a></li>
+     <li><a class="dropdown-item " href="{% url 'query' 'M' %}">Medium</a></li>
+      <li><a class="dropdown-item" href="{% url 'query' 'H' %}">High</a></li>
+    </ul>
+  </div>
+  {% endblock dropdown %}

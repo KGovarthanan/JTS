@@ -1,0 +1,33 @@
+{% extends 'priority.html' %}
+{% block body %}
+<body>
+    {% for task in tasks %} 
+    <div class="card  mb-3 " style="max-width: 80rem;">
+        <div class="card-header text-bg-primary">{{task.title}}</div>
+        <div class="card-body py-1">
+          <h5 class="card-title">{{task.title}}</h5>
+          <p class="card-text">{{ task.description }}</p>
+          <ul class="nav nav-pills "  role="tablist">
+            <li>Prority: <span class="badge rounded-pill 
+{% if task.priority == 'L' %}
+text-bg-primary
+{% elif task.priority == 'M' %}
+text-bg-warning
+{% else %}
+text-bg-Danger  
+{% endif %}">{{ task.priority }}</span></li>
+            <li class="mx-5">status: <span class="badge rounded-pill 
+{% if task.status == 'P' %}
+text-bg-warning
+{% elif task.status == 'I' %}
+text-bg-primary
+{% else %}
+text-bg-success  
+{% endif %}">{{ task.status }}</span></li>
+        </div>
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+</body>
+{% endblock body %}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+
+    <link
+      rel="stylesheet"
+      href="{% static 'css/font/bootstrap-icons.min.css' %}"
+    />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static '/images/letter-t.png' %}"
+    />
+
+    <title>{% block title %}{% endblock title %}</title>
+  </head>
+
+  <body>
+    <header
+      style="
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      "
+    >
+      <div class="px-3 py-2 text-bg-primary border-bottom">
+        <div class="container">
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+          >
+            <!-- <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"> -->
+            <h1 class="text-center">Task Manager</h1>
+          </div>
+        </div>
+      </div>
+      <div class="px-3 py-2 border-bottom border-black mb-3">
+        <div class="container d-flex flex-wrap justify-content-center gap-2">
+          {% block search %} {% endblock search %} {% if user.is_authenticated%}
+          <div>
+            <ul
+              class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
+              style="
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman',
+                  serif;
+              "
+            >
+              {% if user.is_superuser %}
+              <li>
+                <a class="nav-link text-black"
+                  ><i class="bi bi-people-fill"></i> {{user}}
+                </a>
+              </li>
+              {% else %}
+              <li>
+                <a class="nav-link text-black"
+                  ><i class="bi bi-people-fill"></i> {{user.get_full_name}}
+                </a>
+              </li>
+              {% endif %}
+
+              <li>
+                <a href="{% url 'home' %}" class="nav-link text-black"
+                  ><i class="bi bi-house-door-fill"></i> Home
+                </a>
+              </li>
+
+              {% block create %} {% endblock create %} {% block dropdown %} {% endblock dropdown %}
+              <li class="mx-2">
+                <form action="{% url 'logout' %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Log out</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+
+          <div class="container d-flex flex-row justify-content-center gap-1">
+            {% if not user.is_authenticated %}
+
+            <form action="{% url 'Mylogin' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success me-2">Login</button>
+            </form>
+
+            <form action="{% url 'register' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Sign-up</button>
+            </form>
+
+            {% else %}
+            <div></div>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">{% block body %}{% endblock body %}</main>
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

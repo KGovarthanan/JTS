@@ -1,0 +1,424 @@
+
+{% extends 'base.html' %}
+
+{% block create %}
+<li><a href="{% url 'newtask' %}"><button type="submit" class="btn  btn-success mx-2"  >+ Create Task</button></a></li>
+     
+{% endblock create %}
+    
+<!-- <li><a href="{% url 'newtask' %}"><button type="submit" class="btn  btn-success mx-2"  >+ Create Task</button></a></li> -->
+ 
+{% block body %}
+<style>
+    .help {
+      background-color: blue;
+      color: white;
+      border-radius: 5px;
+      padding: 2px 2px;  
+      display: inline-block;  
+      max-width:100%;  
+      align-items: center;  
+      font-size: 1.1em; 
+      font-weight: bold; 
+      margin-left: 600px;
+  }
+  </style>
+{% comment %} <body>   
+    {% if search %}
+    
+    <div class="text-center">{{author}}</div>
+  {% for tasks in task %}
+  {% if  auth.id == task.author_id %}
+    <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+        <div class="card-header text-bg-primary">{{tasks.title|upper}}</div>
+        <div class="card-body py-1">
+            
+        
+                
+            
+            <h5 class="card-title"><b>Task ID: </b><strong> {{tasks.id}}</strong></h5> 
+            <h5 class="card-title"><b>Task Title: </b><strong>{{tasks.title}}</strong></h5>
+            <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+            <ul class="nav nav-pills " role="tablist">
+                <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                text-bg-primary
+            {% elif tasks.priority == 'M' %}
+                text-bg-warning
+                {% else %}
+                text-bg-danger  
+                {% endif %}">
+                {% if tasks.priority == 'L' %}
+<strong>Low</strong>
+{% elif tasks.priority == 'M' %}
+<strong>Medium</strong>  
+{% elif tasks.priority == 'H'%}
+<strong>High</strong>  
+{% else %}
+{% endif %}
+                </span></li>
+                <li class="mx-5"><b>status: </b> <span class="badge rounded-pill 
+{% if tasks.status == 'P' %}
+text-bg-warning
+{% elif tasks.status == 'I' %}
+text-bg-primary  
+{% else %}
+text-bg-success  
+{% endif %}">
+{% if tasks.status == 'P' %}
+<strong>Pending</strong>
+{% elif tasks.status == 'I' %}
+<strong>InProgress</strong>  
+{% elif tasks.status == 'C'%}
+<strong>Completed</strong>  
+{% else %}
+{% endif %}
+
+</span></li>
+        </div>
+        </ul>
+    </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <h2>No Task Available related to <strong>
+        {% if query == 'H' %}
+            High
+        {% elif query == 'M' %}
+            Medium
+        {% elif query == 'l'%}
+            Low
+        {% else %}
+        {{query}}
+        {% endif %}
+        
+    </strong></h2>
+  
+    {% endfor %}
+    {% else %}
+    <div class="text-center">{{author}}</div>
+    <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+        <div class="card-header text-bg-primary text-center"><strong>{{tasks.title|upper}}</strong></div>
+        <div class="card-body py-1">
+            
+        
+                
+            <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.id}}</strong></h5>  
+            <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.title}}</strong></h5>
+            <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+            <ul class="nav nav-pills " role="tablist">
+                <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                text-bg-primary
+            {% elif tasks.priority == 'M' %}
+                text-bg-warning
+                {% else %}
+                text-bg-danger  
+                {% endif %}">
+                {% if tasks.priority == 'L' %}
+<strong>Low</strong>
+{% elif tasks.priority == 'M' %}
+<strong>Medium</strong>  
+{% elif tasks.priority == 'H'%}
+<strong>High</strong>  
+{% else %}
+{% endif %}
+                </span></li>
+                <li class="mx-5"><b>Status: </b> <span class="badge rounded-pill 
+{% if tasks.status == 'P' %}
+text-bg-warning
+{% elif tasks.status == 'I' %}
+text-bg-primary  
+{% else %}
+text-bg-success  
+{% endif %}">
+{% if tasks.status == 'P' %}
+<strong>Pending</strong>
+{% elif tasks.status == 'I' %}
+<strong>InProgress</strong>  
+{% elif tasks.status == 'C'%}
+<strong>Completed</strong>  
+{% else %}
+{% endif %}
+
+</span></li>
+        </div>
+        </ul>
+    </div>
+    </div>
+    
+    {% endif %}
+    
+</body>
+ {% endcomment %}
+
+
+
+
+ <body> 
+{% if user.is_superuser and  not vtask %}
+ 
+    {% for auth in authors %}
+    
+    <i class="help mb-3">Task By:{{auth.username}}</i>
+ 
+    {% if search %}
+    
+      {% for tasks in task %}
+      
+      {% if  auth.id == tasks.author_id %}
+     
+        <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+            <div class="card-header text-bg-primary">{{tasks.title|upper}}</div>
+            <div class="card-body py-1">
+                
+            
+                    
+                
+                <h5 class="card-title"><b>Task ID: </b><strong> {{tasks.id}}</strong></h5> 
+                <h5 class="card-title"><b>Task Title: </b><strong>{{tasks.title}}</strong></h5>
+                <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+                <ul class="nav nav-pills " role="tablist">
+                    <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                    text-bg-primary
+                {% elif tasks.priority == 'M' %}
+                    text-bg-warning
+                    {% else %}
+                    text-bg-danger  
+                    {% endif %}">
+                    {% if tasks.priority == 'L' %}
+    <strong>Low</strong>
+    {% elif tasks.priority == 'M' %}
+    <strong>Medium</strong>  
+    {% elif tasks.priority == 'H'%}
+    <strong>High</strong>  
+    {% else %}
+    {% endif %}
+                    </span></li>
+                    <li class="mx-5"><b>status: </b> <span class="badge rounded-pill 
+    {% if tasks.status == 'P' %}
+    text-bg-warning
+    {% elif tasks.status == 'I' %}
+    text-bg-primary  
+    {% else %}
+    text-bg-success  
+    {% endif %}">
+    {% if tasks.status == 'P' %}
+    <strong>Pending</strong>
+    {% elif tasks.status == 'I' %}
+    <strong>InProgress</strong>  
+    {% elif tasks.status == 'C'%}
+    <strong>Completed</strong>  
+    {% else %}
+    {% endif %}
+    <h5 class="card-title"><b>Task Hrs: </b><strong>{{tasks.time}}</strong></h5> 
+    </span></li>
+            </div>
+            </ul>
+        </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <h2>No Task Available related to <strong>
+            {% if query == 'H' %}
+                High
+            {% elif query == 'M' %}
+                Medium
+            {% elif query == 'l'%}
+                Low
+            {% else %}
+            {{query}}
+            {% endif %}
+            
+        </strong></h2>
+      
+        {% endfor %}
+        {% else %}
+       <div>In-2</div>
+        <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+            <div class="card-header text-bg-primary text-center"><strong>{{tasks.title|upper}}</strong></div>
+            <div class="card-body py-1">
+                
+            
+                    
+                <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.id}}</strong></h5>  
+                <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.title}}</strong></h5>
+                <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+                <ul class="nav nav-pills " role="tablist">
+                    <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                    text-bg-primary
+                {% elif tasks.priority == 'M' %}
+                    text-bg-warning
+                    {% else %}
+                    text-bg-danger  
+                    {% endif %}">
+                    {% if tasks.priority == 'L' %}
+    <strong>Low</strong>
+    {% elif tasks.priority == 'M' %}
+    <strong>Medium</strong>  
+    {% elif tasks.priority == 'H'%}
+    <strong>High</strong>  
+    {% else %}
+    {% endif %}
+                    </span></li>
+                    <li class="mx-5"><b>Status: </b> <span class="badge rounded-pill 
+    {% if tasks.status == 'P' %}
+    text-bg-warning
+    {% elif tasks.status == 'I' %}
+    text-bg-primary  
+    {% else %}
+    text-bg-success  
+    {% endif %}">
+    {% if tasks.status == 'P' %}
+    <strong>Pending</strong>
+    {% elif tasks.status == 'I' %}
+    <strong>InProgress</strong>  
+    {% elif tasks.status == 'C'%}
+    <strong>Completed</strong>  
+    {% else %}
+    {% endif %}
+    <h5 class="card-title"><b>Task Hrs: </b><strong>{{tasks.time}}</strong></h5> 
+    </span></li>
+            </div>
+            </ul>
+        </div>
+        </div>
+        
+        {% endif %}
+        
+    </body>
+    
+    
+
+    {% endfor %}
+{% else %}
+
+
+    {% if search %}
+    
+    {% for tasks in task %}
+    
+  
+      <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+          <div class="card-header text-bg-primary">{{tasks.title|upper}}</div>
+          <div class="card-body py-1">
+              
+          
+                  
+              
+              <h5 class="card-title"><b>Task ID: </b><strong> {{tasks.id}}</strong></h5> 
+              <h5 class="card-title"><b>Task Title: </b><strong>{{tasks.title}}</strong></h5>
+              <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+              <ul class="nav nav-pills " role="tablist">
+                  <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                  text-bg-primary
+              {% elif tasks.priority == 'M' %}
+                  text-bg-warning
+                  {% else %}
+                  text-bg-danger  
+                  {% endif %}">
+                  {% if tasks.priority == 'L' %}
+  <strong>Low</strong>
+  {% elif tasks.priority == 'M' %}
+  <strong>Medium</strong>  
+  {% elif tasks.priority == 'H'%}
+  <strong>High</strong>  
+  {% else %}
+  {% endif %}
+                  </span></li>
+                  <li class="mx-5"><b>status: </b> <span class="badge rounded-pill 
+  {% if tasks.status == 'P' %}
+  text-bg-warning
+  {% elif tasks.status == 'I' %}
+  text-bg-primary  
+  {% else %}
+  text-bg-success  
+  {% endif %}">
+  {% if tasks.status == 'P' %}
+  <strong>Pending</strong>
+  {% elif tasks.status == 'I' %}
+  <strong>InProgress</strong>  
+  {% elif tasks.status == 'C'%}
+  <strong>Completed</strong>  
+  {% else %}
+  {% endif %}
+  <h5 class="card-title"><b>Task Hrs: </b><strong>{{tasks.time}}</strong></h5> 
+  </span></li>
+          </div>
+          </ul>
+      </div>
+      </div>
+      
+      {% empty %}
+      <h2>No Task Available related to <strong>
+          {% if query == 'H' %}
+              High
+          {% elif query == 'M' %}
+              Medium
+          {% elif query == 'l'%}
+              Low
+          {% else %}
+          {{query}}
+          {% endif %}
+          
+      </strong></h2>
+    
+      {% endfor %}
+    
+
+    {% else %}
+    
+
+        <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+            <div class="card-header text-bg-primary text-center"><strong>{{tasks.title|upper}}</strong></div>
+            <div class="card-body py-1">
+                
+            
+                    
+                <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.id}}</strong></h5>  
+                <h5 class="card-title "><b>Task ID: </b><strong>{{tasks.title}}</strong></h5>
+                <p class="card-text"><b>Description: </b>{{ tasks.description }}</p>
+                <ul class="nav nav-pills " role="tablist">
+                    <li><b>Priority:</b> <span class="badge rounded-pill {% if tasks.priority == 'L' %}
+                    text-bg-primary
+                {% elif tasks.priority == 'M' %}
+                    text-bg-warning
+                    {% else %}
+                    text-bg-danger  
+                    {% endif %}">
+                    {% if tasks.priority == 'L' %}
+    <strong>Low</strong>
+    {% elif tasks.priority == 'M' %}
+    <strong>Medium</strong>  
+    {% elif tasks.priority == 'H'%}
+    <strong>High</strong>  
+    {% else %}
+    {% endif %}
+                    </span></li>
+                    <li class="mx-5"><b>Status: </b> <span class="badge rounded-pill 
+    {% if tasks.status == 'P' %}
+    text-bg-warning
+    {% elif tasks.status == 'I' %}
+    text-bg-primary  
+    {% else %}
+    text-bg-success  
+    {% endif %}">
+    {% if tasks.status == 'P' %}
+    <strong>Pending</strong>
+    {% elif tasks.status == 'I' %}
+    <strong>InProgress</strong>  
+    {% elif tasks.status == 'C'%}
+    <strong>Completed</strong>  
+    {% else %}
+    {% endif %}
+    <h5 class="card-title"><b>Task Hrs: </b><strong>{{tasks.time}}</strong></h5> 
+    </span></li>
+            </div>
+            </ul>
+        </div>
+        </div>
+
+        
+    {% endif %}
+
+{% endif %}
+    
+{% endblock body %}

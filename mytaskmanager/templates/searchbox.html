@@ -1,0 +1,8 @@
+{% block search %}
+<form action="{% url 'searchbox' %}" method="" class="col-8 col-lg-auto mb-2 mb-lg-0 me-lg-auto " role="search" >
+<div class="d-flex flex-row  gap-2">   
+<input type="text" class="form-control border-black"  placeholder="Search..." aria-label="Search" name="search">
+    <button type="submit" class="btn btn-primary ">GO</button>
+</div>
+</form>
+{% endblock search %}

@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% block search %}
+{% include 'searchbox.html' %}
+{% endblock search %}
+{% block dropdown %}
+{% include 'priority.html' %}
+{% endblock dropdown %}
+{% block create %}
+<li><a href="{% url 'newtask' %}"><button type="submit" class="btn  btn-success mx-2"  >+ Create Task</button></a></li>
+{% endblock create %}   
+{% block body %}
+<style>
+  .help {
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    padding: 2px 2px;  
+    display: inline-block;  
+    max-width:100%;  
+    align-items: center;  
+    font-size: 1.1em; 
+    font-weight: bold; 
+    margin-left: 600px;
+}
+</style>
+<body>
+  {% if save == True %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{tasktitle}} Updated Successfully</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  {% if newsave == True %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{tasktitle}} Created Successsfully</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  {% if delete == True %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Task {{tasktitle}} is Deleted successfully</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+{% if user.is_superuser and not vtask %}
+   {% for auth  in authors %}
+     <i class="help mb-3">Task By:{{auth.username}}</i>
+     {% for task  in  tasks %}
+     {% if  auth.id == task.author_id %}
+     <div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+      <div class="card-header text-bg-primary text-center"><b></b><strong>{{task.title|upper}}  </strong></div>
+      <div class="card-body py-1">
+        <h5 class="card-title "><b>Task Title: </b><strong>{{task.title}}</strong></h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="card-text mb-0"><b>Description: </b>{{ task.description|truncatechars:8 }}</p> 
+          <div class="d-flex gap-2">
+              <!-- View Task -->
+              <form action="{% url 'mytask' task.id %}" method="GET" class="d-inline-block">
+                  <button class="btn btn-primary">View</button>
+              </form>
+              <!-- Update Task  -->
+              <form action="{% url 'updatetask' task.id %} " method="GET" class="d-inline-block">
+                  {% csrf_token %}
+                  <button class="btn btn-success">Update</button>
+              </form>
+              <!-- Delete Task  -->
+              <form action="" method="GET" class="d-inline-block"  >
+                  {% csrf_token %}
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalSheet{{ task.id }}">
+                    Delete 
+                </button>
+              </form>
+          </div>
+      </div>
+      </div>
+        <ul class="nav nav-pills "  role="tablist">
+          <li class="mx-3"><b>Priority: </b><span class="badge rounded-pill 
+{% if task.priority == 'L' %}
+text-bg-primary
+{% elif task.priority == 'M' %}
+text-bg-warning
+{% elif task.priority == 'H' %}
+text-bg-danger 
+{% else %} 
+{% endif %}">{{ task.priority }}</span></li>
+          <li class="mx-5"><b>Status:</b> <span class="badge rounded-pill 
+{% if task.status == 'P' %}
+text-bg-warning
+{% elif task.status == 'I' %}
+text-bg-primary
+{% else %}
+text-bg-success  
+{% endif %}">{{ task.status }}</span></li>
+      </div>
+      <h5 class="card-title"><b>Task Hrs: </b><strong>{{task.time}}</strong></h5> 
+        </ul>
+        
+      </div>
+    </div>
+    <div class="modal fade" id="modalSheet{{ task.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header border-bottom-0">
+            <h1 class="modal-title fs-5">Delete Task ID: {{ task.id }}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body py-0">
+            <p>Are you sure you want to delete "<strong>Task Title: {{ task.title }}</strong>"?</p>
+          </div>
+          <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+            <form action="{% url 'deletetask' task.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-lg btn-danger">Yes, Delete</button>
+              <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+     {% empty %}
+     <h2>No Task Available related to User {{auth.username}} </h2>
+     {% endfor %}
+   {% comment %} {% endfor %} {% endcomment %}
+{% comment %} {% elif save %}
+{% for task  in  tasks %}
+<div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+ <div class="card-header text-bg-primary text-center"><b></b><strong>{{task.title|upper}}  </strong></div>
+ <div class="card-body py-1">
+   <h5 class="card-title "><b>Task Title: </b><strong>{{task.title}}</strong></h5>
+   <div class="d-flex justify-content-between align-items-center">
+     <p class="card-text mb-0"><b>Description: </b>{{ task.description|truncatechars:8 }}</p> 
+     <div class="d-flex gap-2">
+         <!-- View Task -->
+         <form action="{% url 'mytask' task.id %}" method="GET" class="d-inline-block">
+             <button class="btn btn-primary">View</button>
+         </form>
+         <!-- Update Task  -->
+         <form action="{% url 'updatetask' task.id %} " method="GET" class="d-inline-block">
+             {% csrf_token %}
+             <button class="btn btn-success">Update</button>
+         </form>
+         <!-- Delete Task ) -->
+         <form action="" method="GET" class="d-inline-block"  >
+             {% csrf_token %}
+             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalSheet{{ task.id }}">
+               Delete 
+           </button>
+         </form>
+     </div>
+ </div>
+ </div>
+   <ul class="nav nav-pills "  role="tablist">
+     <li class="mx-3"><b>Priority: </b><span class="badge rounded-pill 
+{% if task.priority == 'L' %}
+text-bg-primary
+{% elif task.priority == 'M' %}
+text-bg-warning
+{% elif task.priority == 'H' %}
+text-bg-danger 
+{% else %} 
+{% endif %}">{{ task.priority }}</span></li>
+     <li class="mx-5"><b>Status:</b> <span class="badge rounded-pill 
+{% if task.status == 'P' %}
+text-bg-warning
+{% elif task.status == 'I' %}
+text-bg-primary
+{% else %}
+text-bg-success  
+{% endif %}">{{ task.status }}</span></li>
+ </div>
+   </ul>
+ </div>
+</div> {% endcomment %}
+{% empty %}
+<h2>No Task Available related to User {{auth.username}} </h2>
+{% endfor %}
+{% elif uhome %}
+{% for task in tasks %}
+<div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+ <div class="card-header text-bg-primary text-center"><b></b><strong>{{task.title|upper}}  </strong></div>
+ <div class="card-body py-1">
+   <h5 class="card-title "><b>Task Title: </b><strong>{{task.title}}</strong></h5>
+   <div class="d-flex justify-content-between align-items-center">
+     <p class="card-text mb-0"><b>Description: </b>{{ task.description|truncatechars:8 }}</p> 
+     <div class="d-flex gap-2">
+         <!-- View Task -->
+         <form action="{% url 'mytask' task.id %}" method="GET" class="d-inline-block">
+             <button class="btn btn-primary">View</button>
+         </form>
+         <!-- Update Task  -->
+         <form action="{% url 'updatetask' task.id %} " method="GET" class="d-inline-block">
+             {% csrf_token %}
+             <button class="btn btn-success">Update</button>
+         </form>
+         <!-- Delete Task  -->
+         <form action="" method="GET" class="d-inline-block"  >
+             {% csrf_token %}
+             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalSheet1{{ task.id }}">
+               Delete 
+           </button>
+         </form>
+     </div>
+ </div>
+ </div>
+   <ul class="nav nav-pills "  role="tablist">
+     <li class="mx-3"><b>Priority: </b><span class="badge rounded-pill 
+{% if task.priority == 'L' %}
+text-bg-primary
+{% elif task.priority == 'M' %}
+text-bg-warning
+{% elif task.priority == 'H' %}
+text-bg-danger 
+{% else %} 
+{% endif %}">{{ task.priority }}</span></li>
+     <li class="mx-5"><b>Status:</b> <span class="badge rounded-pill 
+{% if task.status == 'P' %}
+text-bg-warning
+{% elif task.status == 'I' %}
+text-bg-primary
+{% else %}
+text-bg-success  
+{% endif %}">{{ task.status }}</span></li>
+<h5 class="card-title"><b>Task Hrs: </b><strong>{{task.time}}</strong></h5> 
+ </div>
+   </ul>
+ </div>
+</div>
+<div class="modal fade" id="modalSheet1{{ task.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+        <h1 class="modal-title fs-5">Delete Task ID: {{ task.id }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-0">
+        <p>Are you sure you want to delete "<strong>Task Title: {{ task.title }}</strong>"?</p>
+      </div>
+      <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+        <form action="{% url 'deletetask' task.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-lg btn-danger">Yes, Delete</button>
+          <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% empty%}
+<h2>No Task Available related to User: {{user.get_full_name}},kindly create task <strong></strong>
+{% endfor %}
+ {% else %}
+<div class="card my-2 mb-3 mx-auto py-1" style="max-width: 60rem;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+  <div class="card-header text-bg-primary text-center"><strong>{{task.title|upper}}</strong></div>
+  <div class="card-body py-1">
+      <h5 class="card-title "><b>Task ID: </b><strong>{{task.id}}</strong></h5>  
+      <h5 class="card-title "><b>Task ID: </b><strong>{{task.title}}</strong></h5>
+      <div class="d-flex justify-content-between align-items-center">
+      <p class="card-text"><b>Description: </b>{{ task.description }}</p>
+      <div class="d-flex gap-2">
+        <form action="{% url 'updatetask' task.id %} " method="GET" class="d-inline-block">
+            {% csrf_token %}
+            <button class="btn btn-success">Update</button>
+        </form>
+        <form action="" method="GET" class="d-inline-block"  >
+            {% csrf_token %}
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalSheet{{ task.id }}">
+              Delete 
+          </button>
+        </form>
+    </div>
+  </div>
+      <ul class="nav nav-pills " role="tablist">
+          <li><b>Priority:</b> <span class="badge rounded-pill {% if task.priority == 'L' %}
+          text-bg-primary
+      {% elif task.priority == 'M' %}
+          text-bg-warning
+          {% else %}
+          text-bg-danger  
+          {% endif %}">
+          {% if task.priority == 'L' %}
+<strong>Low</strong>
+{% elif task.priority == 'M' %}
+<strong>Medium</strong>  
+{% elif task.priority == 'H'%}
+<strong>High</strong>  
+{% else %}
+{% endif %}
+          </span></li>
+          <li class="mx-5"><b>Status: </b> <span class="badge rounded-pill 
+{% if task.status == 'P' %}
+text-bg-warning
+{% elif task.status == 'I' %}
+text-bg-primary  
+{% else %}
+text-bg-success  
+{% endif %}">
+{% if task.status == 'P' %}
+<strong>Pending</strong>
+{% elif task.status == 'I' %}
+<strong>InProgress</strong>  
+{% elif task.status == 'C'%}
+<strong>Completed</strong>  
+{% else %}
+{% endif %}
+</span></li>
+<h5 class="card-title"><b>Task Hrs: </b><strong>{{task.time}}</strong></h5> 
+  </div>
+  </ul>
+</div>
+</div>
+<div class="modal fade" id="modalSheet{{ task.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+        <h1 class="modal-title fs-5">Delete Task ID: {{ task.id }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-0">
+        <p>Are you sure you want to delete "<strong>Task Title: {{ task.title }}</strong>"?</p>
+      </div>
+      <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+        <form action="{% url 'deletetask' task.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-lg btn-danger">Yes, Delete</button>
+          <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock body %}

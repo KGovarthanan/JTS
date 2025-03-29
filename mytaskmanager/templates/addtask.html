@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block body %}
+<style>
+    .errorlist{
+      color: red;
+    }
+    .help_text {
+      background-color: blue;
+      color: white;
+      border-radius: 20px;
+      padding: 2px 2px;  
+      display: inline-block;  
+      max-width:100%;  
+      white-space: nowrap;  
+      font-size: 0.8em;  
+  }
+ .mandatory{
+    color: red;
+ }
+  </style>
+<div class="container d-flex justify-content-center align-items-center   ">
+    <div class="card p-4 shadow-lg" style="width: 550px;height:600px">
+        <h3 class="text-center mb-3">Task</h3>
+        <h6 class="text-center  mb-3 mandatory">* Fields are mandatory for Task Creation</h6>
+    <form action=" {% url 'newtask' %} " method="POST" novalidate>
+        {% csrf_token %}
+        <div>{{ form.non_field_errors }}</div>
+        <div class="mb-3 ">
+            <div class="mb-3" >
+                <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label><b class="mandatory">*</b>
+                {{ form.title }} 
+            </div>
+            <div><b>{{form.title.errors}}</b></div>
+            <div class="mb-3 ">
+                <div class="mb-3" >
+                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                    {{ form.description }}
+                </div>
+                <div class="mb-3 " >
+                 <span > <label for="{{ form.priority.id_for_label }}" class="form-label">{{ form.priority.label }}</label><b class="mandatory">*</b><i class="help_text mx-5">{{form.priority.help_text}}</i></span>
+                    <span class="bg-primary rounded-circle">{{ form.priority }}</span>
+                </div>
+                <div class="mb-3 " >
+                    <span><label for="{{ form.status.id_for_label }}" class="form-label">{{ form.status.label }}</label><b class="mandatory">*</b><i class="help_text mx-5">{{form.status.help_text}}</i></span>
+                    {{ form.status }} 
+                </div>
+                <div class="mb-3" >
+                    <label for="{{ form.time.id_for_label }}" class="form-label">{{ form.time.label }}</label><b class="mandatory">*</b>
+                    {{ form.time }} 
+                </div>
+            <div class="d-grid mx-md-5 py-4">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+    </form>
+</div>
+</div>
+    {% endblock body %}
